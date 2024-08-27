@@ -50,7 +50,7 @@ export const ChaptersList = ({
 
     const bulkUpdateData = updatedChapters.map((chapter) => ({
       id: chapter.id,
-      position: items.findIndex((item) => item.id === chapter.id),
+      position: items.findIndex((item) => item.id === chapter.id) + 1,
     }));
 
     onReorder(bulkUpdateData);
