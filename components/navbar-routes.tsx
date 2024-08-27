@@ -11,7 +11,7 @@ const NavbarRoutes = () => {
   const pathname = usePathname();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
-  const isPlayerPage = pathname?.includes("/chapter");
+  const isPlayerPage = pathname?.includes("/courses");
   const isSearchPage = pathname === "/search";
 
   return (
