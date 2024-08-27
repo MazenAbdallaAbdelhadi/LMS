@@ -1,4 +1,5 @@
 import { currentUser } from "@/lib/auth";
+import { UserRole } from "@prisma/client";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -6,8 +7,8 @@ const f = createUploadthing();
 
 const handleAuth = async () => {
   const user = await currentUser();
-
-  if (!user || !user.id) throw new Error("unAuthorized");
+  const isAuthorized = user?.role === UserRole.ADMIN;
+  if (!user || !user.id || !isAuthorized) throw new Error("unAuthorized");
 
   return { userId: user.id };
 };

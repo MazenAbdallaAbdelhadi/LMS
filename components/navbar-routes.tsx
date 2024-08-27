@@ -2,13 +2,16 @@
 import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
+import { UserRole } from "@prisma/client";
 
 import { UserButton } from "@/components/auth/user-button";
 import { Button } from "./ui/button";
 import { SearchInput } from "./search-inpute";
+import { useCurrentRole } from "@/hooks/use-current-role";
 
 const NavbarRoutes = () => {
   const pathname = usePathname();
+  const role = useCurrentRole();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isPlayerPage = pathname?.includes("/courses");
@@ -29,13 +32,13 @@ const NavbarRoutes = () => {
               Exit
             </Button>
           </Link>
-        ) : (
+        ) : role === UserRole.ADMIN ? (
           <Link href="/teacher/courses">
             <Button size="sm" variant="ghost">
               Teacher mode
             </Button>
           </Link>
-        )}
+        ) : null}
 
         <UserButton />
       </div>

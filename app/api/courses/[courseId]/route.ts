@@ -2,6 +2,7 @@ import Mux from "@mux/mux-node";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { UserRole } from "@prisma/client";
 
 const { video } = new Mux({
   tokenId: process.env.MUX_TOKEN_ID!,
@@ -17,7 +18,7 @@ export async function PATCH(
     const { courseId } = params;
     const values = await req.json();
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const course = await db.course.update({
@@ -45,7 +46,7 @@ export async function DELETE(
     const user = await currentUser();
     const { courseId } = params;
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const course = await db.course.findUnique({

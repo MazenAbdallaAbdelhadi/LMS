@@ -1,5 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(
@@ -10,7 +11,7 @@ export async function POST(
     const user = await currentUser();
     const { url } = await req.json();
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const courseOwner = await db.course.findUnique({
@@ -23,13 +24,12 @@ export async function POST(
     if (!courseOwner) return new NextResponse("unAuthorized", { status: 401 });
 
     const attachment = await db.attachment.create({
-        data:{
-            url,
-            name: url.split('/').pop(),
-            courseId: params.courseId,
-        }
-    })
-
+      data: {
+        url,
+        name: url.split("/").pop(),
+        courseId: params.courseId,
+      },
+    });
 
     return NextResponse.json(attachment);
   } catch (error) {

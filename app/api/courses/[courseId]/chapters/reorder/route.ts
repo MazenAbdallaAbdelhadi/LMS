@@ -1,5 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function PUT(
@@ -10,7 +11,7 @@ export async function PUT(
     const user = await currentUser();
     const { courseId } = params;
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const { list } = await req.json();

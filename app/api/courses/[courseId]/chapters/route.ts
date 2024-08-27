@@ -1,5 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(
@@ -11,7 +12,7 @@ export async function POST(
     const { courseId } = params;
     const {title} = await req.json();
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const courseOwner = await db.course.findUnique({

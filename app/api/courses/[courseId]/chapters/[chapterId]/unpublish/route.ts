@@ -1,5 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -14,7 +15,7 @@ export async function PATCH(
     const user = await currentUser();
     const { courseId, chapterId } = params;
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const courseOwner = await db.course.findUnique({

@@ -12,7 +12,7 @@ export const publicRoutes = [
 
 /**
  * An Array of routes that are used for authentication
- * These routes will redirect users to /settings
+ * These routes will redirect users to /
  * @type {string[]}
  */
 export const authRoutes = [

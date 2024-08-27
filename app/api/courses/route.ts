@@ -1,5 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { UserRole } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -7,7 +8,7 @@ export async function POST(req: Request) {
     const user = await currentUser();
     const { title } = await req.json();
 
-    if (!user || !user.id) {
+    if (!user || !user.id || user.role !== UserRole.ADMIN) {
       return new NextResponse("unAuthorized", { status: 401 });
     }
 

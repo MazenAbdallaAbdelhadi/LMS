@@ -2,6 +2,7 @@ import Mux from "@mux/mux-node";
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { UserRole } from "@prisma/client";
 
 const { video } = new Mux({
   tokenId: process.env.MUX_TOKEN_ID!,
@@ -21,7 +22,7 @@ export async function PATCH(
     const { courseId, chapterId } = params;
     const { isPublished, ...values } = await req.json();
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const courseOwner = await db.course.findUnique({
@@ -93,7 +94,7 @@ export async function DELETE(
     const user = await currentUser();
     const { courseId, chapterId } = params;
 
-    if (!user || !user.id)
+    if (!user || !user.id || user.role !== UserRole.ADMIN)
       return new NextResponse("unAuthorized", { status: 401 });
 
     const courseOwner = await db.course.findUnique({
@@ -140,21 +141,21 @@ export async function DELETE(
     });
 
     const publishedChaptersInCourse = await db.chapter.findMany({
-      where:{
+      where: {
         courseId: params.courseId,
         isPublished: true,
-      }
-    })
+      },
+    });
 
-    if(!publishedChaptersInCourse.length){
+    if (!publishedChaptersInCourse.length) {
       await db.course.update({
-        where:{
+        where: {
           id: params.courseId,
         },
-        data:{
+        data: {
           isPublished: false,
-        }
-      })
+        },
+      });
     }
 
     return NextResponse.json(deletedChapter);
