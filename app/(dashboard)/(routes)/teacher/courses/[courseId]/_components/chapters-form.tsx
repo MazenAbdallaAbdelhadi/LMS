@@ -56,6 +56,7 @@ export const ChaptersForm = ({ courseId, initialData }: ChaptersFormProps) => {
       toast.success("Chapter created");
       toggleCreating();
       router.refresh();
+      form.reset();
     } catch (error) {
       toast.error("Something went wrong");
     }
