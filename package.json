@@ -39,6 +39,7 @@
     "next": "14.2.5",
     "next-auth": "^5.0.0-beta.20",
     "next-themes": "^0.3.0",
+    "nodemailer": "^6.9.15",
     "query-string": "^9.1.0",
     "react": "^18",
     "react-confetti": "^6.1.0",
@@ -61,6 +62,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
